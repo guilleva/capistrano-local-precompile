@@ -5,6 +5,7 @@ namespace :load do
     set :packs_dir,        "public/packs"
     set :rsync_cmd,        "rsync -av --delete"
     set :assets_role,      "web"
+    set :assets_cleanup,    true
 
     after "bundler:install", "deploy:assets:prepare"
     after "deploy:assets:prepare", "deploy:assets:rsync"
@@ -16,10 +17,12 @@ namespace :deploy do
   namespace :assets do
     desc "Remove all local precompiled assets"
     task :cleanup do
-      run_locally do
-        with rails_env: fetch(:precompile_env) do
-          execute "rm", "-rf", fetch(:assets_dir)
-          execute "rm", "-rf", fetch(:packs_dir)
+      if fetch(:assets_cleanup)
+        run_locally do
+          with rails_env: fetch(:precompile_env) do
+            execute "rm", "-rf", fetch(:assets_dir)
+            execute "rm", "-rf", fetch(:packs_dir)
+          end
         end
       end
     end
