@@ -31,7 +31,8 @@ namespace :deploy do
     task :prepare do
       run_locally do
         execute "bundle exec rake assets:clean RAILS_ENV=#{fetch(:precompile_env)} NODE_ENV=#{fetch(:precompile_env)}"
-        execute "bundle exec rake assets:precompile RAILS_ENV=#{fetch(:precompile_env)} NODE_ENV=#{fetch(:precompile_env)}"
+        execute "bundle exec rake webpacker:compile RAILS_ENV=#{fetch(:precompile_env)} NODE_ENV=#{fetch(:precompile_env)}"
+        execute "bundle exec rake assets:precompile RAILS_ENV=#{fetch(:precompile_env)} NODE_ENV=#{fetch(:precompile_env)} WEBPACKER_PRECOMPILE=no"
       end
     end
 
